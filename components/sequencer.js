@@ -4,7 +4,7 @@ const randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); // 
 import * as R from 'ramda';
 import { useState } from 'react';
 import Settings from './settings';
-import { sequencerBase } from './settingBases';
+import { constrainMinMax, sequencerBase } from './settingBases';
 
 const defaultConfig = {
     lowest: 1,
@@ -32,19 +32,6 @@ const shuffler = R.curry(function(random, list) {
 }),
 shuffle = shuffler(Math.random);
 
-// CONFIG
-/*
-Sample Configuration with Details about Usage
-{
-    lowest: 1,           // lowest number possible in sequence
-    highest: 8,          // highest number possible in sequence
-    allNumbers: false,   // use every possible number in sequence
-    length: 4,           // length of sequences generated
-    synced: false,       // generates at every new beat from metronome
-    ascending: false,    // forces sequence to ascending order
-}
-*/
-
 export default function Sequencer({ startingConfig, settings }) {
     const [config, setConfig] = useState(R.defaultTo(defaultConfig, startingConfig));
     const [sequence, setSequence] = useState([]);
@@ -69,7 +56,7 @@ export default function Sequencer({ startingConfig, settings }) {
             </h3>
             <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
                     onClick={run}>Generate</button>
-            <Settings existingConfig={config} configBase={sequencerBase} syncFunc={updateConfig} />
+            <Settings existingConfig={config} configBase={sequencerBase} constraints={constrainMinMax} syncFunc={updateConfig} />
         </div>
     );
 }

@@ -4,13 +4,13 @@ const randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); // 
 import * as R from 'ramda';
 import { useEffect, useState } from 'react';
 import Settings from './settings';
-import { togglerBase } from './settingBases';
+import { togglerBase, constrainMinMax } from './settingBases';
 
 const DEBUG = false;
 
 const defaultConfig = {
-    min: 2,
-    max: 4,
+    lowest: 2,
+    highest: 4,
     textOn:   'On',
     textOff:  'Off',
     beatSync: false,
@@ -33,7 +33,7 @@ export default function Toggler() {
     function activate() {
         if (DEBUG) console.log('Toggler Activated.');
         setIntervalID(setInterval(tick, 1000));
-        ticks = config.max;
+        ticks = config.highest;
         if (needsReset) setNeedsReset(false);
     }
 
@@ -57,7 +57,7 @@ export default function Toggler() {
     }
 
     const toggle = () => {
-        ticks = randInt(config.min, config.max + 1);
+        ticks = randInt(config.lowest, config.highest + 1);
         if (DEBUG) console.log('Ticks reset to ', ticks);
         state = !state;
         updateMessage();
@@ -76,7 +76,7 @@ export default function Toggler() {
                     onClick={togglePower}>{powerOn ? 'Deactivate' : 'Activate'}</button>
             <h3 className='my-3 p-3 text-4xl font-extrabold bg-gray-200'>{message}</h3>
             {needsReset ? <p className='text-red-600'>Restart Toggler to apply settings.</p> : ''}
-            <Settings existingConfig={config} configBase={togglerBase} syncFunc={updateConfig} />
+            <Settings existingConfig={config} configBase={togglerBase} syncFunc={updateConfig} constraints={constrainMinMax} />
         </div>
     );
 }

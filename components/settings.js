@@ -3,6 +3,7 @@
 // Returns a new config object upon changes
 
 import { useState } from "react";
+import { allPass } from "ramda";
 
 const castTo = (value, inputType) => {
     const functions = {
@@ -13,9 +14,12 @@ const castTo = (value, inputType) => {
     return functions[inputType](value);
 }
 
-export default function Settings({ existingConfig, configBase, syncFunc }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [generatedConfig, setGenConfig] = useState({});
+// Constraints prop is an array containing functions used to verify that an altered constraint is valid.
+
+export default function Settings({ existingConfig, configBase, syncFunc, constraints }) {
+    const               [isOpen, setIsOpen] = useState(false);
+    const   [generatedConfig, setGenConfig] = useState({});
+    const [badValWarning, setBadValWarning] = useState(false);
 
     const toggleSettings = () => setIsOpen(!isOpen);
 
@@ -28,10 +32,20 @@ export default function Settings({ existingConfig, configBase, syncFunc }) {
         return types[typeof val];
     }
 
-    const generateConfig = () => Object.fromEntries(configBase.map((setting) => [setting.key, valueOfInput(setting.key)]));
+    const generateConfig =       () => Object.fromEntries(configBase.map((setting) => [setting.key, valueOfInput(setting.key)]));
+    const    validConfig = (config) => constraints ? allPass(constraints)(config) : true;
+    const   warningClass = "m-1 p-1 border border-red-700 text-red-500 italic tracking-tighter underline";
 
-    const syncWithParent = () => {
-        syncFunc(generateConfig());
+    const syncWithParent = (e) => {
+        const newConfig = generateConfig();
+        if (validConfig(newConfig)) {
+            syncFunc(newConfig);
+            setGenConfig(newConfig);
+            setBadValWarning(false);
+        } else {
+            e.target.value = generatedConfig[e.target.name];
+            setBadValWarning(true);
+        }
     }
 
     const settingToInput = (setting) => {
@@ -64,11 +78,11 @@ export default function Settings({ existingConfig, configBase, syncFunc }) {
             {configBase.map(settingToInput)}
         </dl>
     )
-
     return (
         <div className='m-4 border text-center bg-gray-100'>
             <h1 className='text-2xl underline'>Settings</h1>
             {isOpen ? settingsBox : ''}
+            <p className={badValWarning ? warningClass : warningClass + ' hidden'}>The value you entered is invalid!</p>
             <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
                     onClick={toggleSettings}>{isOpen ? 'Close Settings' : 'Open Settings'}</button>
         </div>

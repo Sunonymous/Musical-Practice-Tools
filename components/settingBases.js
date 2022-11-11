@@ -1,5 +1,11 @@
 'use strict';
 
+// All constraint functions are passed the generated config object from the settings module.
+export const constrainMinMax = [
+    (c) => c.lowest  < c.highest,
+    (c) => c.highest > c.lowest,
+];
+
 export const sequencerBase = [
     {
         key: 'lowest',
@@ -39,14 +45,16 @@ export const sequencerBase = [
 
 export const togglerBase = [
     {
-        key: 'min',
+        key: 'lowest',
         name: 'Minimum Seconds Before Change',
         value: 2,
+        min: 1,
     },
     {
-        key: 'max',
+        key: 'highest',
         name: 'Maximum Seconds Before Change',
         value: 4,
+        min: 2,
     },
     {
         key: 'textOn',
