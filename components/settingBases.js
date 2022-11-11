@@ -36,3 +36,31 @@ export const sequencerBase = [
         value: false,
     },
 ];
+
+export const togglerBase = [
+    {
+        key: 'min',
+        name: 'Minimum Seconds Before Change',
+        value: 2,
+    },
+    {
+        key: 'max',
+        name: 'Maximum Seconds Before Change',
+        value: 4,
+    },
+    {
+        key: 'textOn',
+        name: 'Text to Display When On',
+        value: 'On',
+    },
+    {
+        key: 'textOff',
+        name: 'Text to Display When Off',
+        value: 'Off',
+    },
+    {
+        key: 'beatSync',
+        name: 'Synced to Metronome',
+        value: false,
+    },
+];

@@ -13,7 +13,7 @@ const castTo = (value, inputType) => {
     return functions[inputType](value);
 }
 
-export default function Settings({ configBase, syncFunc }) {
+export default function Settings({ existingConfig, configBase, syncFunc }) {
     const [isOpen, setIsOpen] = useState(false);
     const [generatedConfig, setGenConfig] = useState({});
 
@@ -45,7 +45,7 @@ export default function Settings({ configBase, syncFunc }) {
                                min={minOrNull}
                                max={maxOrNull}
                                onChange={syncWithParent}
-                               defaultValue={setting.value}></input></dd>
+                               defaultValue={existingConfig[setting.key] || setting.value}></input></dd>
                 </div>
         );
     }
@@ -56,7 +56,6 @@ export default function Settings({ configBase, syncFunc }) {
 
         const value = element.type === 'checkbox' ? element.checked : element.value;
         const result = castTo(value, element.type)
-        console.log(`cast result for ${inputName}:`, result, 'type of:', typeof result);
         return castTo(value, element.type);
     }
 
@@ -67,7 +66,7 @@ export default function Settings({ configBase, syncFunc }) {
     )
 
     return (
-        <div className='h-screen border text-center bg-gray-100'>
+        <div className='m-4 border text-center bg-gray-100'>
             <h1 className='text-2xl underline'>Settings</h1>
             {isOpen ? settingsBox : ''}
             <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'

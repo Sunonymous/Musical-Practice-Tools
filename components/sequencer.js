@@ -50,7 +50,6 @@ export default function Sequencer({ startingConfig, settings }) {
     const [sequence, setSequence] = useState([]);
 
     function buildSequence() {
-        console.log('build ran');
         const numericalSort = (a, b) => a - b;
         const    nextNumber = () => randInt(config.lowest, config.highest + 1);
         const       numbers = R.times(nextNumber, config.length);
@@ -59,25 +58,18 @@ export default function Sequencer({ startingConfig, settings }) {
     
     const shuffleSequence = () => setSequence(shuffle(R.range(config.lowest, config.highest + 1)));
     const    updateConfig = (newConfig) => setConfig(newConfig);
-
-    const constrainConfig = (rawConfig) => {
-        // this failed
-    }
     
-    function run() {
-        console.log('useAllNumbers:', config.useAllNumbers);
-        !!config.useAllNumbers ? shuffleSequence() : buildSequence()
-    }
+    const run = () => !!config.useAllNumbers ? shuffleSequence() : buildSequence();
 
     return (
-        <div className='h-screen border text-center bg-gray-100'>
+        <div className='border text-center bg-gray-100'>
             <h1 className='text-2xl underline'>Sequencer</h1>
             <h3 className='my-3 p-3 bg-gray-200'>
                 {R.isEmpty(sequence) ? 'Press Generate' : sequence.join(' - ')}
             </h3>
             <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
                     onClick={run}>Generate</button>
-            <Settings configBase={sequencerBase} syncFunc={updateConfig} />
+            <Settings existingConfig={config} configBase={sequencerBase} syncFunc={updateConfig} />
         </div>
     );
 }
