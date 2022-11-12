@@ -116,7 +116,7 @@ export default function TwelveKeys() {
     return (
         <div className='border text-center bg-gray-100'>
             <h1 className='text-2xl underline'>12 Key Completion</h1>
-            <div className='flex flex-row justify-center p-4 bg-white'>
+            <div className='flex flex-row flex-wrap justify-center p-4 bg-white'>
                 {R.keys(keys).map((k) => {
                     return <div onClick={() => setActiveKey(k)} key={k} className={getKeyClass(k)}>{k}</div>
                 })}
