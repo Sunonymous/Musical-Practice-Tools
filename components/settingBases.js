@@ -32,15 +32,20 @@ export const sequencerBase = [
         value: 4,
     },
     {
-        key: 'synced',
-        name: 'Sync to Metronome',
-        value: false,
-    },
-    {
         key: 'ascending',
         name: 'Force Ascending Sequence',
         value: false,
     },
+    {
+        key: 'duplicateLimit',
+        name: 'Limit Duplicates to',
+        value: 2,
+    }
+    // {
+    //     key: 'synced',
+    //     name: 'Sync to Metronome',
+    //     value: false,
+    // },
 ];
 
 export const togglerBase = [
@@ -66,9 +71,9 @@ export const togglerBase = [
         name: 'Text to Display When Off',
         value: 'Off',
     },
-    {
-        key: 'beatSync',
-        name: 'Synced to Metronome',
-        value: false,
-    },
+    // {
+    //     key: 'beatSync',
+    //     name: 'Synced to Metronome',
+    //     value: false,
+    // },
 ];

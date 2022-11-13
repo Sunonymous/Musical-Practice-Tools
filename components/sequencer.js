@@ -11,7 +11,7 @@ const defaultConfig = {
     highest: 8,
     length: 4,
     useAllNumbers: false,
-    beatSync: false,
+    // beatSync: false,
     ascending: false,
 };
 

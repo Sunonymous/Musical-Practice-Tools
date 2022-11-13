@@ -13,7 +13,7 @@ const defaultConfig = {
     highest: 4,
     textOn:   'On',
     textOff:  'Off',
-    beatSync: false,
+    // beatSync: false,
 };
 
 // Because there should only ever be one instance of this component,
