@@ -1,5 +1,7 @@
 'use strict';
 
+import { range } from 'ramda';
+
 // All constraint functions are passed the generated config object from the settings module.
 export const constrainMinMax = [
     (c) => c.lowest  < c.highest,
@@ -30,6 +32,8 @@ export const sequencerBase = [
         key: 'length',
         name: 'Sequence Length',
         value: 4,
+        min: 2,
+        max: 20,
     },
     {
         key: 'ascending',
@@ -40,12 +44,21 @@ export const sequencerBase = [
         key: 'duplicateLimit',
         name: 'Limit Duplicates to',
         value: 2,
+        min: 1,
     }
     // {
     //     key: 'synced',
     //     name: 'Sync to Metronome',
     //     value: false,
     // },
+];
+export const sequencerConstraints = [
+    ...constrainMinMax,
+    (c) => {
+        const maxValidNumbers = c.duplicateLimit * range(c.lowest, c.highest + 1).length;
+        console.log('maxValidNumber:', maxValidNumbers);
+        return c.length <= maxValidNumbers;
+    },
 ];
 
 export const togglerBase = [

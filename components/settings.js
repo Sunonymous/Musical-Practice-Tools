@@ -21,7 +21,10 @@ export default function Settings({ existingConfig, configBase, syncFunc, constra
     const   [generatedConfig, setGenConfig] = useState({});
     const [badValWarning, setBadValWarning] = useState(false);
 
-    const toggleSettings = () => setIsOpen(!isOpen);
+    const toggleSettings = () => {
+        setIsOpen(!isOpen);
+        setBadValWarning(false);
+    }
 
     const valueToInputType = (val) => {
         const types = {

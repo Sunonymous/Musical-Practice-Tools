@@ -1,18 +1,21 @@
 // Helper Functions
 const randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); // max is exclusive
+const  randEm =      (arr) => arr[randInt(0, arr.length)];
 
 import * as R from 'ramda';
 import { useState } from 'react';
 import Settings from './settings';
-import { constrainMinMax, sequencerBase } from './settingBases';
+import { sequencerConstraints, sequencerBase } from './settingBases';
+import next from 'next';
 
 const defaultConfig = {
     lowest: 1,
     highest: 8,
     length: 4,
     useAllNumbers: false,
-    // beatSync: false,
     ascending: false,
+    duplicateLimit: 2,
+    // beatSync: false,
 };
 
 // This randomness function lovingly "borrowed" from:
@@ -38,8 +41,13 @@ export default function Sequencer({ startingConfig, settings }) {
 
     function buildSequence() {
         const numericalSort = (a, b) => a - b;
-        const    nextNumber = () => randInt(config.lowest, config.highest + 1);
-        const       numbers = R.times(nextNumber, config.length);
+        const numbers = [];
+        const randomNumber = () => randInt(config.lowest, config.highest + 1);
+        for (let i = 0; i < config.length; i++) {
+            let nextNumber = randomNumber();
+            while (R.count(R.identical(nextNumber), numbers) >= config.duplicateLimit) nextNumber = randomNumber();
+            numbers.push(nextNumber);
+        }
         setSequence(config.ascending ? numbers.sort(numericalSort) : numbers);
     }
     
@@ -56,7 +64,7 @@ export default function Sequencer({ startingConfig, settings }) {
             </h3>
             <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
                     onClick={run}>Generate</button>
-            <Settings existingConfig={config} configBase={sequencerBase} constraints={constrainMinMax} syncFunc={updateConfig} />
+            <Settings existingConfig={config} configBase={sequencerBase} constraints={sequencerConstraints} syncFunc={updateConfig} />
         </div>
     );
 }
