@@ -54,11 +54,7 @@ export const sequencerBase = [
 ];
 export const sequencerConstraints = [
     ...constrainMinMax,
-    (c) => {
-        const maxValidNumbers = c.duplicateLimit * range(c.lowest, c.highest + 1).length;
-        console.log('maxValidNumber:', maxValidNumbers);
-        return c.length <= maxValidNumbers;
-    },
+    (c) => c.length <= c.duplicateLimit * range(c.lowest, c.highest + 1).length, // length of sequence longer than possible values
 ];
 
 export const togglerBase = [

@@ -39,16 +39,18 @@ export default function Sequencer({ startingConfig, settings }) {
     const [config, setConfig] = useState(R.defaultTo(defaultConfig, startingConfig));
     const [sequence, setSequence] = useState([]);
 
-    function buildSequence() {
-        const numericalSort = (a, b) => a - b;
-        const numbers = [];
-        const randomNumber = () => randInt(config.lowest, config.highest + 1);
-        for (let i = 0; i < config.length; i++) {
-            let nextNumber = randomNumber();
-            while (R.count(R.identical(nextNumber), numbers) >= config.duplicateLimit) nextNumber = randomNumber();
-            numbers.push(nextNumber);
+    const numericalSort = (a, b) => a - b;
+    const randomInRange =     () => randInt(config.lowest, config.highest + 1);
+
+    function buildSequence(seq=[]) {
+        if (seq.length === config.length) {
+            setSequence(config.ascending ? seq.sort(numericalSort) : seq);
+            return;
+        } else {
+            let numberToAdd = randomInRange();
+            while (R.count(R.identical(numberToAdd), seq) >= config.duplicateLimit) numberToAdd = randomInRange();
+            return buildSequence(seq.concat(numberToAdd));
         }
-        setSequence(config.ascending ? numbers.sort(numericalSort) : numbers);
     }
     
     const shuffleSequence = () => setSequence(shuffle(R.range(config.lowest, config.highest + 1)));
