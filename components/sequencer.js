@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { useState } from 'react';
 import Settings from './settings';
 import { sequencerConstraints, sequencerBase } from './settingBases';
-import next from 'next';
+// import next from 'next'; // I don't know where this appeared from. Commenting to ensure nothing breaks. Delete if found later.
 
 const defaultConfig = {
     lowest: 1,
@@ -59,12 +59,11 @@ export default function Sequencer({ startingConfig, settings }) {
     const run = () => !!config.useAllNumbers ? shuffleSequence() : buildSequence();
 
     return (
-        <div className='border text-center bg-gray-100'>
-            <h1 className='text-2xl underline'>Sequencer</h1>
-            <h3 className='my-3 p-3 bg-gray-200'>
+        <div>
+            <h3 className='my-3 py-3 border-t-2 border-b-2 border-t-gray-500 border-b-gray-500 text-4xl font-extrabold bg-gray-200'>
                 {R.isEmpty(sequence) ? 'Press Generate' : sequence.join(' - ')}
             </h3>
-            <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
+            <button className='py-1 px-2 m-1 bg-gray-100 border-2 border-double border-black rounded-xl text-lg font-semibold text-black'
                     onClick={run}>Generate</button>
             <Settings existingConfig={config} configBase={sequencerBase} constraints={sequencerConstraints} syncFunc={updateConfig} />
         </div>

@@ -114,8 +114,7 @@ export default function TwelveKeys() {
     }
 
     return (
-        <div className='border text-center bg-gray-100'>
-            <h1 className='text-2xl underline'>12 Key Completion</h1>
+        <div>
             <div className='flex flex-row flex-wrap justify-center p-4 bg-white'>
                 {R.keys(keys).map((k) => {
                     return <div onClick={() => setActiveKey(k)} key={k} className={getKeyClass(k)}>{k}</div>
@@ -141,7 +140,7 @@ export default function TwelveKeys() {
                 <option value='random'  >Random Key</option>
             </select>
             <br />
-            <h3>Change Key by Semitones</h3>
+            {/* <h3>Change Key by Semitones</h3>
             <div className='border p-2 flex flex-row justify-center'>
                 <button className={keyButtonClass}
                         onClick={prevFifth}>-5</button>
@@ -151,8 +150,8 @@ export default function TwelveKeys() {
                         onClick={nextKey}>+1</button>
                 <button className={keyButtonClass}
                         onClick={nextFifth}>+5</button>
-            </div>
-            <button className='p-3 m-2 bg-red-500 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
+            </div> */}
+            <button className='px-2 py-1 m-2 bg-red-500 hover:bg-red-700 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
                     onClick={reset}>Reset</button>
         </div>
     )

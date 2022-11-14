@@ -70,11 +70,10 @@ export default function Toggler() {
     }
 
     return (
-        <div className='border text-center bg-gray-100'>
-            <h1 className='text-2xl underline'>Toggler</h1>
-            <button className='m-1 p-1 border-2 border-gray-500 rounded-md'
+        <div>
+            <button className='py-1 px-2 m-1 bg-white border-2 border-double border-black rounded-xl text-lg font-semibold text-black'
                     onClick={togglePower}>{powerOn ? 'Deactivate' : 'Activate'}</button>
-            <h3 className='my-3 p-3 text-4xl font-extrabold bg-gray-200'>{message}</h3>
+            <h3 className='my-3 py-3 border-t-2 border-b-2 border-t-gray-500 border-b-gray-500 text-4xl font-extrabold bg-gray-200'>{message}</h3>
             {needsReset ? <p className='text-red-600'>Restart Toggler to apply settings.</p> : ''}
             <Settings existingConfig={config} configBase={togglerBase} syncFunc={updateConfig} constraints={constrainMinMax} />
         </div>

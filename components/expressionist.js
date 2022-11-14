@@ -6,7 +6,7 @@ const    randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); 
 const     randEm =      (arr) => arr[randInt(0, arr.length)];
 const capitalize =        (s) => s && s[0].toUpperCase() + s.slice(1);
 
-const              empty = '--';
+const              empty = '—';
 const           dynamics = ['tone', 'volume', 'tempo', 'articulation', 'mood', 'motion'];
 const dualCaseCategories = ['volume', 'tempo', 'articulation'];
 const    blankExpression = Object.fromEntries(dynamics.map((d) => [d, empty]));
@@ -38,10 +38,11 @@ export default function Expressionist() {
 
     const formatDynamic = (dynamic) => {
         return (
-            <div key={dynamic} className='m-2 p-3 px-5 border'>
-                <h2>{capitalize(dynamic)}</h2>
-                <hr />
-                <h2>{capitalize(expression[dynamic])}</h2>
+            <div key={dynamic} className='w-2/6 md:w-4/6 m-2 p-3 px-5 bg-white border rounded-xl drop-shadow-md'>
+                <h2 className='text-sm text-left text-gray-400'>{capitalize(dynamic)}</h2>
+                <hr className='' />
+                <h2 className='font-semibold text-md'>{capitalize(expression[dynamic])}</h2>
+                <hr className='' />
                 <input  className='mx-1 p-1' type='checkbox' data-dynamic={dynamic} />
                 {expression[dynamic] === empty ? '' : (<button className='mx-1 px-2 border rounded-full font-bold text-white bg-red-500' data-dynamic={dynamic} onClick={clearDynamic}>X</button>)}
             </div>
@@ -50,7 +51,7 @@ export default function Expressionist() {
 
     const formatExpression = () => {
         return (
-            <div className='flex flex-row flex-wrap justify-center'>
+            <div className='w-full flex flex-row flex-wrap justify-center'>
               {dynamics.map(formatDynamic)}   
             </div>
         );
@@ -64,8 +65,7 @@ export default function Expressionist() {
     }
     
     return (
-        <div className='border text-center bg-gray-100'>
-            <h1 className='text-2xl underline'>Expressionist</h1>
+        <div>
             <button className='m-1 p-1 border-2 border-gray-500 rounded-md' onClick={setCheckedAll}>De/Select All</button>
             <button className='m-1 p-1 border-2 border-gray-500 rounded-md' onClick={clearAllDyns}>Clear All</button>
             {formatExpression()}
