@@ -124,7 +124,7 @@ export default function TwelveKeys() {
                     disabled={allKeysComplete()}
                     onClick={previousIncomplete}>Prev</button>
             <button className={keyButtonClass}
-                    onClick={toggleCompletion}>Toggle</button>
+                    onClick={toggleCompletion}>{keys[activeKey] ? 'Uncomplete' : 'Complete'}</button>
             <button className={keyButtonClass}
                     disabled={allKeysComplete()}
                     onClick={nextIncomplete}>Next</button>

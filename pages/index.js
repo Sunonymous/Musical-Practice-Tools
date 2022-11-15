@@ -15,10 +15,12 @@ export default function Home() {
       <h1 className='p-4 font-bold tracking-wider text-right text-white text-3xl'>Musical Practice Tools</h1>
     </div>
     {/* <Metronome /> */}
-    <Tool toolName="Toggler"><Toggler/></Tool>
-    <Tool toolName="Sequencer"><Sequencer/></Tool>
-    <Tool toolName="Twelve Keys"><TwelveKeys/></Tool>
-    <Tool toolName="Expressionist"><Expressionist /></Tool>
+    <div className='flex flex-col lg:flex-row lg:flex-wrap m-4'>
+      <Tool toolName="Toggler"><Toggler/></Tool>
+      <Tool toolName="Sequencer"><Sequencer/></Tool>
+      <Tool toolName="Twelve Keys"><TwelveKeys/></Tool>
+      <Tool toolName="Expressionist"><Expressionist /></Tool>
+    </div>
     <footer className='relative bottom-5 mt-10 mx-auto p-1 border-t-2 border-t-gray-500 border-dotted text-center'>
       Made with ❤️ by <a className='text-lg hover:underline' href="https://thesunny.one/">🌞</a>
     </footer>

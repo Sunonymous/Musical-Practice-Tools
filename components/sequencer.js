@@ -39,12 +39,13 @@ export default function Sequencer({ startingConfig, settings }) {
     const [config, setConfig] = useState(R.defaultTo(defaultConfig, startingConfig));
     const [sequence, setSequence] = useState([]);
 
+    const  sortIfNeeded =  (arr) => config.ascending ? arr.sort(numericalSort) : arr;
     const numericalSort = (a, b) => a - b;
     const randomInRange =     () => randInt(config.lowest, config.highest + 1);
 
     function buildSequence(seq=[]) {
         if (seq.length === config.length) {
-            setSequence(config.ascending ? seq.sort(numericalSort) : seq);
+            setSequence(sortIfNeeded(seq));
             return;
         } else {
             let numberToAdd = randomInRange();
@@ -53,15 +54,15 @@ export default function Sequencer({ startingConfig, settings }) {
         }
     }
     
-    const shuffleSequence = () => setSequence(shuffle(R.range(config.lowest, config.highest + 1)));
+    const shuffleSequence = () => setSequence(sortIfNeeded(shuffle(R.range(config.lowest, config.highest + 1))));
     const    updateConfig = (newConfig) => setConfig(newConfig);
     
     const run = () => !!config.useAllNumbers ? shuffleSequence() : buildSequence();
 
     return (
         <div>
-            <h3 className='my-3 py-3 border-t-2 border-b-2 border-t-gray-500 border-b-gray-500 text-4xl font-extrabold bg-gray-200'>
-                {R.isEmpty(sequence) ? 'Press Generate' : sequence.join(' - ')}
+            <h3 className='my-3 py-3 border-t-2 border-b-2 border-t-gray-500 border-b-gray-500 text-2xl lg:text-4xl font-extrabold bg-gray-200'>
+                {R.isEmpty(sequence) ? '—' : sequence.join(' - ')}
             </h3>
             <button className='py-1 px-2 m-1 bg-gray-100 border-2 border-double border-black rounded-xl text-lg font-semibold text-black'
                     onClick={run}>Generate</button>

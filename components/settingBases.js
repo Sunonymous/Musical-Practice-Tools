@@ -3,9 +3,18 @@
 import { range } from 'ramda';
 
 // All constraint functions are passed the generated config object from the settings module.
-export const constrainMinMax = [
+const constrainMinMax = [
     (c) => c.lowest  < c.highest,
     (c) => c.highest > c.lowest,
+];
+
+const minOverZero = (c) => c.lowest > 0;
+
+export const togglerConstraints = [
+    ...constrainMinMax,
+    minOverZero,
+    (c) =>  c.textOn.length > 0,
+    (c) => c.textOff.length > 0,
 ];
 
 export const sequencerBase = [
@@ -25,7 +34,7 @@ export const sequencerBase = [
     },
     {
         key: 'useAllNumbers',
-        name: 'Use All Numbers',
+        name: 'Use Full Range',
         value: false,
     },
     {
@@ -37,12 +46,12 @@ export const sequencerBase = [
     },
     {
         key: 'ascending',
-        name: 'Force Ascending Sequence',
+        name: 'Force Ascending',
         value: false,
     },
     {
         key: 'duplicateLimit',
-        name: 'Limit Duplicates to',
+        name: 'Max Duplicates',
         value: 2,
         min: 1,
     }
@@ -60,24 +69,24 @@ export const sequencerConstraints = [
 export const togglerBase = [
     {
         key: 'lowest',
-        name: 'Minimum Seconds Before Change',
+        name: 'Min Seconds to Change',
         value: 2,
         min: 1,
     },
     {
         key: 'highest',
-        name: 'Maximum Seconds Before Change',
+        name: 'Max Seconds to Change',
         value: 4,
         min: 2,
     },
     {
         key: 'textOn',
-        name: 'Text to Display When On',
+        name: 'Text When On',
         value: 'On',
     },
     {
         key: 'textOff',
-        name: 'Text to Display When Off',
+        name: 'Text When Off',
         value: 'Off',
     },
     // {

@@ -4,24 +4,20 @@
 
 import React, { useState } from "react";
 import { allPass } from "ramda";
+import useDeviceDetect from '../lib/deviceDetect.js';
 
 const castTo = (value, inputType) => {
-    const functions = {
-        number: Number,
-        text: String,
-        checkbox: Boolean,
-    }
+    const functions = { number: Number, text: String, checkbox: Boolean };
     return functions[inputType](value);
 }
 
 // Constraints prop is an array containing functions used to verify that an altered constraint is valid.
-
-
-
 export default function Settings({ existingConfig, configBase, syncFunc, constraints }) {
     const               [isOpen, setIsOpen] = useState(false);
     const   [generatedConfig, setGenConfig] = useState({});
     const [badValWarning, setBadValWarning] = useState(false);
+    const     [cachedValue, setCachedValue] = useState(null);
+    const mobileUser = useDeviceDetect(); // shouldn't change... right?
 
     const gearIcon = (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -54,24 +50,33 @@ export default function Settings({ existingConfig, configBase, syncFunc, constra
             setGenConfig(newConfig);
             setBadValWarning(false);
         } else {
-            e.target.value = generatedConfig[e.target.name];
+            e.target.value = mobileUser ? cachedValue : generatedConfig[e.target.name];
             setBadValWarning(true);
         }
     }
+
+    // for saving initial values on mobile before a change is made
+    // because onChange event works differently for the mobile inputs
+    const cacheValue = (e) => setCachedValue(valueOfInput(e.target.name));
 
     const settingToInput = (setting) => {
         const minOrNull = setting.min || '';
         const maxOrNull = setting.max || '';
 
-        return (<React.Fragment key={setting.key}>
-                    <dt><label htmlFor={setting.name}>{setting.name}:</label></dt>
-                    <dd><input name={setting.key}
-                               type={valueToInputType(setting.value)}
-                               min={minOrNull}
-                               max={maxOrNull}
-                               onChange={syncWithParent}
-                               defaultValue={existingConfig[setting.key] || setting.value}></input></dd>
-                </React.Fragment>
+        return (<li key={setting.key}>
+                    <div className="m-1 h-full flex flex-row content-start">
+                        <label className="m-1 flex-grow" htmlFor={setting.key}>{setting.name}:</label>
+                        <input className="m-1 flex-shrink text-right"
+                                name={setting.key}
+                                type={valueToInputType(setting.value)}
+                                min={minOrNull}
+                                max={maxOrNull}
+                                onChange={mobileUser ? null : syncWithParent}
+                                onFocus={cacheValue}
+                                onBlur={mobileUser ? syncWithParent : null}
+                                defaultValue={existingConfig[setting.key] || setting.value}></input>
+                    </div>
+                </li>
         );
     }
 
@@ -85,9 +90,9 @@ export default function Settings({ existingConfig, configBase, syncFunc, constra
     }
 
     const settingsBox = (
-        <dl className="border border-gray-500 bg-gradient-to-b from-gray-200 to-gray-300 rounded-xl">
+        <ul className="flex flex-col border border-gray-500 bg-gradient-to-b from-gray-200 to-gray-300 rounded-xl">
             {configBase.map(settingToInput)}
-        </dl>
+        </ul>
     )
     return (
         <div className='m-1 p-1 text-center bg-gray-100'>
@@ -95,8 +100,6 @@ export default function Settings({ existingConfig, configBase, syncFunc, constra
                     onClick={toggleSettings}>{gearIcon}</button>
             {isOpen ? settingsBox : ''}
             <p className={badValWarning ? warningClass : warningClass + ' hidden'}>The value you entered is invalid!</p>
-            {/* <button className='p-3 m-2 bg-gray-400 border-2 border-double border-black rounded-xl text-lg font-semibold text-white'
-                    onClick={toggleSettings}>{isOpen ? 'Close Settings' : 'Open Settings'}</button> */}
         </div>
     );
 }

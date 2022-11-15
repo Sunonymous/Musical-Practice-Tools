@@ -25,26 +25,25 @@ export default function Expressionist() {
     const expressionKey = (dynamic) => dualCaseCategories.includes(dynamic) && useMusicTerms ? dynamic + 'Fancy' : dynamic;
     const     isChecked = (checkbox) => checkbox.checked;
     const    allChecked = (checkboxes) => checkboxes.every(isChecked);
-    const   someChecked = (checkboxes) => checkboxes.some(isChecked);
-    const   noneChecked = R.complement(allChecked);
     // state
     const dynamicCBoxes = () => Array.from(document.querySelectorAll("input[data-dynamic][type='checkbox']"));
-    const   shouldCheck = (boxes) => noneChecked(boxes) || (someChecked(boxes) && !allChecked(boxes));
     const setCheckedAll = () => {
         const      boxes = dynamicCBoxes();
-        const checkState = shouldCheck(boxes);
+        const checkState = !allChecked(boxes);
         R.map((b) => b.checked = checkState, boxes);
     }
 
     const formatDynamic = (dynamic) => {
         return (
-            <div key={dynamic} className='w-2/6 md:w-4/6 m-2 p-3 px-5 bg-white border rounded-xl drop-shadow-md'>
+            <div key={dynamic} className='flex flex-col justify-around content-center w-2/6 m-2 p-3 px-2 bg-white border rounded-xl drop-shadow-md'>
                 <h2 className='text-sm text-left text-gray-400'>{capitalize(dynamic)}</h2>
                 <hr className='' />
-                <h2 className='font-semibold text-md'>{capitalize(expression[dynamic])}</h2>
+                <h2 className='font-semibold text-sm md:text-lg text-center'>{capitalize(expression[dynamic])}</h2>
                 <hr className='' />
-                <input  className='mx-1 p-1' type='checkbox' data-dynamic={dynamic} />
-                {expression[dynamic] === empty ? '' : (<button className='mx-1 px-2 border rounded-full font-bold text-white bg-red-500' data-dynamic={dynamic} onClick={clearDynamic}>X</button>)}
+                <div>
+                    <input  className='relative top-[1px] m-1 p-1' type='checkbox' data-dynamic={dynamic} />
+                    {expression[dynamic] === empty ? '' : (<button className='w-5 h-5 m-1 px-1 border rounded-full font-bold text-sm text-white bg-red-500' data-dynamic={dynamic} onClick={clearDynamic}>X</button>)}
+                </div>
             </div>
         )
     }
@@ -70,7 +69,6 @@ export default function Expressionist() {
             <button className='m-1 p-1 border-2 border-gray-500 rounded-md' onClick={clearAllDyns}>Clear All</button>
             {formatExpression()}
             <button className='m-1 p-1 border-2 border-gray-500 rounded-md' onClick={generateExpression}>Generate</button>
-            {/* <h3 className='my-3 p-3 text-4xl font-extrabold bg-gray-200'>Something</h3> */}
         </div>
     );
 }
