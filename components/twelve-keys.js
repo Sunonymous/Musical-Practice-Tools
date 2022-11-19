@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { invertObj, identical, complement, nth, findIndex, keys, values, not, reject } from 'ramda';
 import { useState } from "react"
 
 // Helper Functions
@@ -48,10 +48,10 @@ const flatsToSharps = {
     'G♭': 'F♯',
     'A♭': 'G♯',
 }
-const sharpsToFlats = R.invertObj(flatsToSharps);
+const sharpsToFlats = invertObj(flatsToSharps);
 
 export default function TwelveKeys() {
-    const [keys, setKeys] = useState(emptyFlatKeys);
+    const [allKeys, setAllKeys] = useState(emptyFlatKeys);
     const [activeKey, setActiveKey] = useState('C');
     const [useFlats, setUseFlats] = useState(true);
     const [afterComplete, setAfterComplete] = useState('next');
@@ -65,43 +65,43 @@ export default function TwelveKeys() {
     const inactiveIncomplete = keyClass + 'bg-gray-400 text-gray-300';
     const        allComplete = keyClass + 'bg-amber-400 text-white';
 
-    const   keyIsActive = R.identical(activeKey);
-    const keyIsInactive = R.complement(keyIsActive);
+    const   keyIsActive = identical(activeKey);
+    const keyIsInactive = complement(keyIsActive);
 
     const getKeyClass = (k) => {
         switch(true) {
             case allKeysComplete(): // all complete
                 return keyIsActive(k) ? allComplete + keyBorder : allComplete;
-            case keys[k]:           // complete key
+            case allKeys[k]:           // complete key
                 return keyIsActive(k) ? activeComplete : inactiveComplete
             default:                // incomplete key
                 return keyIsActive(k) ? activeIncomplete : inactiveIncomplete
         }
     }
 
-    const reset = () => useFlats ? setKeys(emptyFlatKeys) : setKeys(emptySharpKeys);
+    const reset = () => useFlats ? setAllKeys(emptyFlatKeys) : setAllKeys(emptySharpKeys);
 
     const wrapIndex = (array, index, addAmt) => (index + addAmt) % array.length;
-    const emAtAddedIndex = (array, currentEm, delta) => R.nth(wrapIndex(array, R.findIndex(R.identical(currentEm), array), delta), array);
+    const emAtAddedIndex = (array, currentEm, delta) => nth(wrapIndex(array, findIndex(identical(currentEm), array), delta), array);
 
-    const   nextKey = () => setActiveKey(emAtAddedIndex(R.keys(keys), activeKey,  1));
-    const nextFifth = () => setActiveKey(emAtAddedIndex(R.keys(keys), activeKey,  5));
-    const   prevKey = () => setActiveKey(emAtAddedIndex(R.keys(keys), activeKey, -1));
-    const prevFifth = () => setActiveKey(emAtAddedIndex(R.keys(keys), activeKey, -5));
+    const   nextKey = () => setActiveKey(emAtAddedIndex(keys(allKeys), activeKey,  1));
+    const nextFifth = () => setActiveKey(emAtAddedIndex(keys(allKeys), activeKey,  5));
+    const   prevKey = () => setActiveKey(emAtAddedIndex(keys(allKeys), activeKey, -1));
+    const prevFifth = () => setActiveKey(emAtAddedIndex(keys(allKeys), activeKey, -5));
 
-    const  allKeysComplete = () => R.values(keys).every((k) => !!k)
+    const  allKeysComplete = () => values(allKeys).every((k) => !!k)
     const toggleCompletion = () => {
-        setKeys({...keys, [activeKey]: R.not(keys[activeKey])})
+        setAllKeys({...allKeys, [activeKey]: not(allKeys[activeKey])})
         console.log('afterComplete:', afterComplete);
         if (!allKeysComplete()) callNextFunc(afterComplete);
     };
 
-    const     incompleteKeys = (includeActive=false) => R.reject((k) => keys[k] || (keyIsActive(k) && includeActive), R.keys(keys));
+    const     incompleteKeys = (includeActive=false) => reject((k) => allKeys[k] || (keyIsActive(k) && includeActive), keys(allKeys));
     const previousIncomplete = () => setActiveKey(emAtAddedIndex(incompleteKeys(), activeKey, -1));
     const     nextIncomplete = () => setActiveKey(emAtAddedIndex(incompleteKeys(), activeKey, 1));
 
     const randomElement = (arr) => arr[randInt(0, arr.length)];
-    const     randomKey = () => setActiveKey(randomElement(R.reject(keyIsActive, incompleteKeys())) || activeKey);
+    const     randomKey = () => setActiveKey(randomElement(reject(keyIsActive, incompleteKeys())) || activeKey);
 
     const callNextFunc = (name) => {
         switch (name) {
@@ -116,7 +116,7 @@ export default function TwelveKeys() {
     return (
         <div>
             <div className='flex flex-row flex-wrap justify-center p-4 bg-white'>
-                {R.keys(keys).map((k) => {
+                {keys(allKeys).map((k) => {
                     return <div onClick={() => setActiveKey(k)} key={k} className={getKeyClass(k)}>{k}</div>
                 })}
             </div>

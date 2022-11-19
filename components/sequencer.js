@@ -2,7 +2,7 @@
 const randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); // max is exclusive
 const  randEm =      (arr) => arr[randInt(0, arr.length)];
 
-import * as R from 'ramda';
+import { range, curry, defaultTo, identical, count, isEmpty } from 'ramda';
 import { useState } from 'react';
 import Settings from './settings';
 import { sequencerConstraints, sequencerBase } from './settingBases';
@@ -21,7 +21,7 @@ const defaultConfig = {
 // This randomness function lovingly "borrowed" from:
 // https://github.com/ramda/ramda/issues/168 
 
-const shuffler = R.curry(function(random, list) {
+const shuffler = curry(function(random, list) {
     var idx = -1;
     var len = list.length;
     var position;
@@ -36,7 +36,7 @@ const shuffler = R.curry(function(random, list) {
 shuffle = shuffler(Math.random);
 
 export default function Sequencer({ startingConfig, settings }) {
-    const [config, setConfig] = useState(R.defaultTo(defaultConfig, startingConfig));
+    const [config, setConfig] = useState(defaultTo(defaultConfig, startingConfig));
     const [sequence, setSequence] = useState([]);
 
     const  sortIfNeeded =  (arr) => config.ascending ? arr.sort(numericalSort) : arr;
@@ -49,12 +49,12 @@ export default function Sequencer({ startingConfig, settings }) {
             return;
         } else {
             let numberToAdd = randomInRange();
-            while (R.count(R.identical(numberToAdd), seq) >= config.duplicateLimit) numberToAdd = randomInRange();
+            while (count(identical(numberToAdd), seq) >= config.duplicateLimit) numberToAdd = randomInRange();
             return buildSequence(seq.concat(numberToAdd));
         }
     }
     
-    const shuffleSequence = () => setSequence(sortIfNeeded(shuffle(R.range(config.lowest, config.highest + 1))));
+    const shuffleSequence = () => setSequence(sortIfNeeded(shuffle(range(config.lowest, config.highest + 1))));
     const    updateConfig = (newConfig) => setConfig(newConfig);
     
     const run = () => !!config.useAllNumbers ? shuffleSequence() : buildSequence();
@@ -62,7 +62,7 @@ export default function Sequencer({ startingConfig, settings }) {
     return (
         <div>
             <h3 className='my-3 py-3 border-t-2 border-b-2 border-t-gray-500 border-b-gray-500 text-2xl lg:text-4xl font-extrabold bg-gray-200'>
-                {R.isEmpty(sequence) ? '—' : sequence.join(' - ')}
+                {isEmpty(sequence) ? '—' : sequence.join(' - ')}
             </h3>
             <button className='py-1 px-2 m-1 bg-gray-100 border-2 border-double border-black rounded-xl text-lg font-semibold text-black'
                     onClick={run}>Generate</button>

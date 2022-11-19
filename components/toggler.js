@@ -1,7 +1,6 @@
 // Helper Functions
 const randInt = (min, max) => Math.floor(Math.random() * (max - min) + min); // max is exclusive
 
-import * as R from 'ramda';
 import { useEffect, useState } from 'react';
 import Settings from './settings';
 import { togglerBase, togglerConstraints } from './settingBases';

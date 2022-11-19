@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { evolve, always, map, mergeRight } from 'ramda';
 import { useState, useEffect } from 'react';
 import expressions from '../lib/expressions';
 
@@ -15,7 +15,7 @@ export default function Expressionist() {
     const    [expression, setExpression] = useState(blankExpression); // =_=
     const [useMusicTerms, setMusicTerms] = useState(false);
 
-    const  clearDynamic =       (e) => setExpression(R.evolve({[e.target.dataset.dynamic]: R.always(empty)}, expression));
+    const  clearDynamic =       (e) => setExpression(evolve({[e.target.dataset.dynamic]: always(empty)}, expression));
     const  clearAllDyns =        () => setExpression(blankExpression);
     const randomDynamic = (dynamic) => {
         const newDynamic = randEm(expressions[expressionKey(dynamic)]);
@@ -30,7 +30,7 @@ export default function Expressionist() {
     const setCheckedAll = () => {
         const      boxes = dynamicCBoxes();
         const checkState = !allChecked(boxes);
-        R.map((b) => b.checked = checkState, boxes);
+        map((b) => b.checked = checkState, boxes);
     }
 
     const formatDynamic = (dynamic) => {
@@ -58,9 +58,9 @@ export default function Expressionist() {
 
     const generateExpression = () => {
         const inputToDynamic = (i) => i.dataset.dynamic;
-        const dynamicsToChange = R.map(inputToDynamic, document.querySelectorAll("input[data-dynamic]:checked"));
+        const dynamicsToChange = map(inputToDynamic, document.querySelectorAll("input[data-dynamic]:checked"));
         const newDynamics = Object.fromEntries(dynamicsToChange.map((d) => [d, randomDynamic(d)]));
-        setExpression(R.mergeRight(expression, newDynamics));
+        setExpression(mergeRight(expression, newDynamics));
     }
     
     return (
